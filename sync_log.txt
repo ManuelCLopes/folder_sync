@@ -71,3 +71,15 @@
 2024-09-17 17:18:11,435 - INFO - File updated: ./sync_log.txt -> ../replica_folder/./sync_log.txt
 2024-09-17 17:18:21,452 - INFO - File copied: ./sync_log.txt -> ../replica_folder/./sync_log.txt
 2024-09-17 17:18:21,452 - INFO - File updated: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:22:21,258 - INFO - File copied: ./sync_folders.py -> ../replica_folder/./sync_folders.py
+2024-09-17 17:22:21,258 - INFO - File updated: ./sync_folders.py -> ../replica_folder/./sync_folders.py
+2024-09-17 17:22:21,258 - INFO - File copied: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:22:21,258 - INFO - File updated: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:22:31,277 - INFO - File copied: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:22:31,277 - INFO - File updated: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:22:56,152 - INFO - File copied: ./sync_folders.py -> ../replica_folder/./sync_folders.py
+2024-09-17 17:22:56,152 - INFO - File updated: ./sync_folders.py -> ../replica_folder/./sync_folders.py
+2024-09-17 17:22:56,153 - INFO - File copied: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:22:56,153 - INFO - File updated: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:22:57,975 - INFO - Received termination signal. Shutting down gracefully...
+2024-09-17 17:23:06,160 - INFO - Sync process terminated.

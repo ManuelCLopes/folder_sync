@@ -3,8 +3,10 @@ import sys
 import time
 import shutil
 import logging
+import signal
 
 CHUNK_SIZE = 1024 * 1024  # 1 MB
+shutdown_flag = False  # Flag to handle shutdown
 
 def setup_logging(log_file):
     # Set up logging to file and console
@@ -109,7 +111,14 @@ def sync_folders(source, replica):
     copy_or_update_files(source, replica)
     delete_extra_files_and_dirs(source, replica)
 
+def handle_signal(signal_received, frame):
+    global shutdown_flag
+    logging.info("Received termination signal. Shutting down sync process...")
+    shutdown_flag = True
+
 def main():
+    global shutdown_flag
+
     # Check if the correct number of arguments is provided
     if len(sys.argv) != 5:
         print("Usage: python sync_folders.py <source_folder> <replica_folder> <sync_interval> <log_file>")
@@ -126,12 +135,18 @@ def main():
 
     setup_logging(log_file)
 
-    while True:
+    # Set up signal handlers for shutdown
+    signal.signal(signal.SIGINT, handle_signal)
+    signal.signal(signal.SIGTERM, handle_signal)
+
+    while not shutdown_flag:
         try:
             sync_folders(source_folder, replica_folder)
         except Exception as e:
             logging.error(f"Unexpected error during sync: {e}")
         time.sleep(sync_interval)
+
+    logging.info("Sync process terminated.")
 
 if __name__ == "__main__":
     main()
