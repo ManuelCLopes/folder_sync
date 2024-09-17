@@ -23,9 +23,12 @@ def create_directories(source_root, replica_root):
         
         for dir_name in dirs:
             replica_dir = os.path.join(replica_dir_root, dir_name)
-            if not os.path.exists(replica_dir):
-                os.makedirs(replica_dir)
-                logging.info(f"Directory created: {replica_dir}")
+            try:
+                if not os.path.exists(replica_dir):
+                    os.makedirs(replica_dir)
+                    logging.info(f"Directory created: {replica_dir}")
+            except OSError as e:
+                logging.error(f"Failed to create directory {replica_dir}: {e}")
 
 def copy_or_update_files(source_root, replica_root):
     # Copy or update files from source to replica
@@ -37,17 +40,20 @@ def copy_or_update_files(source_root, replica_root):
             source_file = os.path.join(root, file_name)
             replica_file = os.path.join(replica_dir_root, file_name)
 
-            if not os.path.exists(replica_file):
-                shutil.copy2(source_file, replica_file)
-                logging.info(f"File copied: {source_file} -> {replica_file}")
-            else:
-                # Check the last modified times
-                source_mtime = os.path.getmtime(source_file)
-                replica_mtime = os.path.getmtime(replica_file)
-
-                if source_mtime > replica_mtime:
+            try:
+                if not os.path.exists(replica_file):
                     shutil.copy2(source_file, replica_file)
-                    logging.info(f"File updated: {source_file} -> {replica_file}")
+                    logging.info(f"File copied: {source_file} -> {replica_file}")
+                else:
+                    # Check the last modified times
+                    source_mtime = os.path.getmtime(source_file)
+                    replica_mtime = os.path.getmtime(replica_file)
+
+                    if source_mtime > replica_mtime:
+                        shutil.copy2(source_file, replica_file)
+                        logging.info(f"File updated: {source_file} -> {replica_file}")
+            except (OSError, IOError) as e:
+                logging.error(f"Error copying/updating file {source_file}: {e}")
 
 def delete_extra_files_and_dirs(source_root, replica_root):
     # Delete files and directories from replica that no longer exist in source
@@ -59,23 +65,33 @@ def delete_extra_files_and_dirs(source_root, replica_root):
             replica_file = os.path.join(root, file_name)
             source_file = os.path.join(source_dir_root, file_name)
 
-            if not os.path.exists(source_file):
-                os.remove(replica_file)
-                logging.info(f"File removed: {replica_file}")
+            try:
+                if not os.path.exists(source_file):
+                    os.remove(replica_file)
+                    logging.info(f"File removed: {replica_file}")
+            except OSError as e:
+                logging.error(f"Failed to remove file {replica_file}: {e}")
 
         for dir_name in dirs:
             replica_dir = os.path.join(root, dir_name)
             source_dir = os.path.join(source_dir_root, dir_name)
 
-            if not os.path.exists(source_dir):
-                shutil.rmtree(replica_dir)
-                logging.info(f"Directory removed: {replica_dir}")
+            try:
+                if not os.path.exists(source_dir):
+                    shutil.rmtree(replica_dir)
+                    logging.info(f"Directory removed: {replica_dir}")
+            except OSError as e:
+                logging.error(f"Failed to remove directory {replica_dir}: {e}")
 
 def sync_folders(source, replica):
     # Main function to synchronize source to replica
-    if not os.path.exists(replica):
-        os.makedirs(replica)
-        logging.info(f"Replica directory created: {replica}")
+    try:
+        if not os.path.exists(replica):
+            os.makedirs(replica)
+            logging.info(f"Replica directory created: {replica}")
+    except OSError as e:
+        logging.error(f"Failed to create replica directory {replica}: {e}")
+        return
 
     create_directories(source, replica)
     copy_or_update_files(source, replica)
@@ -99,7 +115,10 @@ def main():
     setup_logging(log_file)
 
     while True:
-        sync_folders(source_folder, replica_folder)
+        try:
+            sync_folders(source_folder, replica_folder)
+        except Exception as e:
+            logging.error(f"Unexpected error during sync: {e}")
         time.sleep(sync_interval)
 
 if __name__ == "__main__":
