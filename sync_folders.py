@@ -4,6 +4,8 @@ import time
 import shutil
 import logging
 
+CHUNK_SIZE = 1024 * 1024  # 1 MB
+
 def setup_logging(log_file):
     # Set up logging to file and console
     logging.basicConfig(
@@ -30,6 +32,15 @@ def create_directories(source_root, replica_root):
             except OSError as e:
                 logging.error(f"Failed to create directory {replica_dir}: {e}")
 
+def copy_file_in_chunks(source_file, replica_file):
+    # Copy large files in chunks to prevent memory overload
+    try:
+        with open(source_file, 'rb') as src, open(replica_file, 'wb') as dst:
+            shutil.copyfileobj(src, dst, length=CHUNK_SIZE)
+        logging.info(f"File copied: {source_file} -> {replica_file}")
+    except (OSError, IOError) as e:
+        logging.error(f"Error copying file {source_file}: {e}")
+
 def copy_or_update_files(source_root, replica_root):
     # Copy or update files from source to replica
     for root, _, files in os.walk(source_root):
@@ -42,15 +53,16 @@ def copy_or_update_files(source_root, replica_root):
 
             try:
                 if not os.path.exists(replica_file):
-                    shutil.copy2(source_file, replica_file)
-                    logging.info(f"File copied: {source_file} -> {replica_file}")
+                    # If file doesn't exist, copy it in chunks
+                    copy_file_in_chunks(source_file, replica_file)
                 else:
                     # Check the last modified times
                     source_mtime = os.path.getmtime(source_file)
                     replica_mtime = os.path.getmtime(replica_file)
 
                     if source_mtime > replica_mtime:
-                        shutil.copy2(source_file, replica_file)
+                        # If the source file is newer, update the replica
+                        copy_file_in_chunks(source_file, replica_file)
                         logging.info(f"File updated: {source_file} -> {replica_file}")
             except (OSError, IOError) as e:
                 logging.error(f"Error copying/updating file {source_file}: {e}")

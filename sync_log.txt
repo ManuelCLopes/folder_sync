@@ -63,3 +63,11 @@
 2024-09-17 16:56:50,960 - INFO - File updated: ./sync_log.txt -> ../replica_folder/./sync_log.txt
 2024-09-17 16:57:00,964 - INFO - File updated: ./sync_log.txt -> ../replica_folder/./sync_log.txt
 2024-09-17 16:57:10,974 - INFO - File updated: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:17:51,389 - INFO - File copied: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:17:51,389 - INFO - File updated: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:18:01,412 - INFO - File copied: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:18:01,412 - INFO - File updated: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:18:11,435 - INFO - File copied: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:18:11,435 - INFO - File updated: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:18:21,452 - INFO - File copied: ./sync_log.txt -> ../replica_folder/./sync_log.txt
+2024-09-17 17:18:21,452 - INFO - File updated: ./sync_log.txt -> ../replica_folder/./sync_log.txt
